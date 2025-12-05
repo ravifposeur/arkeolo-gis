@@ -30,7 +30,7 @@ app.use('/api/objek', ruteObjek);
 app.use('/api/relasi', ruteRelasi);
 
 app.use(cors({
-    origin: 'https://arkeo-frontend.vercel.app', 
+    origin: 'https://arkeologis.vercel.app', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
