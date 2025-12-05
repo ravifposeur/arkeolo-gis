@@ -1,4 +1,4 @@
-const BASE_URL = 'https://arkeologis-be.vercel.app/';
+const BASE_URL = 'https://arkeologis-be.vercel.app/api';
 
 import { getToken } from './auth.js';
 
