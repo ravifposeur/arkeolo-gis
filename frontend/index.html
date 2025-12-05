@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGis : Islamic Archaelogy GIS</title>
+
+    <!-- Font & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet & Styles -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+
+    <!-- Peta -->
+    <div id="map"></div>
+    
+        <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="Cari nama situs, desa, atau kerajaan...">
+    </div>
+
+    <!-- 2. TOMBOL FILTER -->
+    <button id="btn-filter-toggle" class="floating-btn-filter" title="Filter Data">
+        <i class="fa-solid fa-filter"></i>
+    </button>
+
+    <!-- 3. PANEL FILTER (Hidden) -->
+    <div id="filter-panel" class="filter-panel hidden">
+        <div class="filter-header">
+            <h3>Filter Peta</h3>
+            <span id="close-filter" style="cursor:pointer;">&times;</span>
+        </div>
+        
+            <div class="filter-group">
+        <label>Jenis Situs</label>
+        <div id="filter-jenis-container" class="checkbox-group">
+            <!-- (Checkbox lama biarkan) -->
+            <label><input type="checkbox" value="Candi" checked> Candi</label>
+            <label><input type="checkbox" value="Makam" checked> Makam</label>
+            <label><input type="checkbox" value="Prasasti" checked> Prasasti</label>
+            <label><input type="checkbox" value="Petirtaan" checked> Petirtaan</label>
+            <label><input type="checkbox" value="Gua" checked> Gua</label>
+            <label><input type="checkbox" value="Lainnya" checked> Lainnya</label>
+        </div>
+    </div>
+
+    <!-- FILTER BARU: TOKOH -->
+    <div class="filter-group" style="margin-top: 15px;">
+        <label>Tokoh Terkait</label>
+        <select id="filter-tokoh" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="">Semua Tokoh</option>
+            <!-- Opsi akan diisi JS -->
+        </select>
+    </div>
+
+    <button id="btn-apply-filter" class="btn-primary" style="margin-top:10px; padding:8px;">Terapkan</button>
+    <button id="btn-reset-filter" style="width:100%; background:none; border:none; color:#666; margin-top:5px; cursor:pointer; font-size:12px;">Reset Filter</button>
+    </div>
+
+
+    <!-- Tombol GPS Langsung (Di atas tombol +) -->
+    <button id="btn-gps-direct" class="floating-btn-gps hidden" title="Lapor di lokasi saya">
+        <i class="fa-solid fa-crosshairs"></i>
+    </button>
+
+    <!-- Tombol Dashboard -->
+    <a href="dashboard.html" class="floating-btn btn-dashboard" style="text-decoration: none; text-align: center;">
+        Dashboard
+    </a>
+    
+    
+    <!-- Tombol Login -->
+    <button id="btn-login-toggle" class="floating-btn">Login</button>    
+    
+    <!-- Modal Login -->
+    <div id="modal-login" class="modal hidden">
+        <div class="modal-content">
+            <span id="btn-close-modal" class="close">&times;</span>
+            <h2>Masuk Arkeolo-GIS</h2>
+            <p>Silakan login untuk berkontribusi data.</p>
+            
+            <form id="form-login">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="nama@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="******" required>
+                </div>
+                <button type="submit" class="btn-primary">Masuk</button>
+                
+                <!-- LINK BARU -->
+                <div style="margin-top: 15px; text-align: center; font-size: 13px;">
+                    <a href="#" id="link-forgot" style="color: #2563eb; text-decoration: none;">Lupa Password?</a>
+                    <span style="margin: 0 10px; color: #ddd;">|</span>
+                    <a href="#" id="link-register" style="color: #2563eb; text-decoration: none;">Buat Akun Baru</a>
+                </div>
+            </form>
+            <p id="login-error" class="error-text"></p>
+        </div>
+    </div>
+
+    <div id="modal-register" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-register" class="close">&times;</span>
+            <h2>Daftar Akun Baru</h2>
+            <form id="form-register">
+                <div class="form-group">
+                    <label>Nama Pengguna</label>
+                    <input type="text" id="reg-username" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password (Min. 8 Karakter)</label>
+                    <input type="password" id="reg-password" required minlength="8">
+                </div>
+                <button type="submit" class="btn-primary">Daftar Sekarang</button>
+            </form>
+            <p style="text-align: center; font-size: 13px; margin-top: 10px;">
+                Sudah punya akun? <a href="#" id="link-login-back" style="color: #2563eb; text-decoration: none;">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Tombol Tambah (+) -->
+    <button id="btn-add-mode" class="floating-btn-add hidden">+</button>
+
+    <!-- Modal Tambah Situs -->
+    <div id="modal-add-situs" class="modal hidden">
+        <div class="modal-content">
+            <span id="btn-close-add" class="close">&times;</span>
+            <h2>Lapor Situs Baru</h2>
+            <p>Lokasi: <span id="display-latlng" style="color: #2563eb; font-weight: bold;">-</span></p>
+            
+            <form id="form-add-situs">
+                <input type="hidden" id="input-lat">
+                <input type="hidden" id="input-lng">
+
+                <div class="form-group">
+                    <label>Nama Situs</label>
+                    <input type="text" id="nama_situs" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Jalan / Dusun</label>
+                    <input type="text" id="jalan_dusun" required>
+                </div> 
+
+                <div class="form-group">
+                    <label>Jenis Situs</label>
+                    <select id="jenis_situs" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="" disabled selected>-- Pilih Jenis --</option>
+                        <option value="Candi">Candi</option>
+                        <option value="Makam">Makam</option>
+                        <option value="Prasasti">Prasasti</option>
+                        <option value="Petirtaan">Petirtaan (Pemandian)</option>
+                        <option value="Gua">Gua</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <!-- WILAYAH BERTINGKAT (CHAINED DROPDOWN) -->
+                <div style="background: #f9fafb; padding: 10px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px;">
+                    <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #666;">LOKASI ADMINISTRATIF</p>
+                    
+                    <div class="form-group">
+                        <label>Kota / Kabupaten</label>
+                        <select id="select-kota" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                            <option value="" disabled selected>Memuat...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Kecamatan</label>
+                        <select id="select-kecamatan" disabled required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; background: #eee;">
+                            <option value="" disabled selected>Pilih Kota Dulu</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Desa / Kelurahan</label>
+                        <select id="select-desa" disabled required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; background: #eee;">
+                            <option value="" disabled selected>Pilih Kecamatan Dulu</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- BAGIAN KERAJAAN -->
+                <div class="form-group">
+                    <label>Kerajaan / Masa</label>
+                    <select id="select-kerajaan" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="" disabled selected>Memuat...</option>
+                    </select>
+                    
+                    <!-- Input Hidden untuk Kerajaan Baru (Styling bersih) -->
+                    <input type="text" id="input-new-kerajaan" class="hidden" placeholder="Tulis Nama Kerajaan Baru..."
+                           style="margin-top: 8px;">
+>
+                </div>
+
+                <!-- BAGIAN PENELITI (ARKEOLOG) -->
+                <div class="form-group">
+                    <label>Peneliti Utama (Opsional)</label>
+                    <select id="select-arkeolog" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="" disabled selected>Memuat...</option>
+                    </select>
+
+                    <!-- Input Hidden untuk Arkeolog Baru (Styling bersih) -->
+                    <input type="text" id="input-new-arkeolog" class="hidden" placeholder="Tulis Nama Peneliti Baru..." 
+                           style="margin-top: 8px;">
+                </div>
+
+                <button type="submit" class="btn-primary">Kirim Laporan</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-forgot" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-forgot" class="close">&times;</span>
+            <h2>Lupa Password</h2>
+            <p>Masukkan email Anda. Kami akan mengirimkan token reset.</p>
+            <form id="form-forgot">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="forgot-email" required>
+                </div>
+                <button type="submit" class="btn-primary">Kirim Token</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-reset" class="modal hidden">
+        <div class="modal-content">
+            <span id="close-reset" class="close">&times;</span>
+            <h2>Reset Password</h2>
+            <p>Masukkan Token yang Anda terima dan password baru.</p>
+            <form id="form-reset">
+                <div class="form-group">
+                    <label>Token Reset</label>
+                    <input type="text" id="reset-token" placeholder="Paste token dari console/email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password Baru</label>
+                    <input type="password" id="reset-password" required minlength="8">
+                </div>
+                <button type="submit" class="btn-primary">Ubah Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div id="side-panel" class="side-panel">
+        <button id="btn-close-panel" class="btn-close-panel">&times;</button>
+        <div id="panel-content">
+            <p class="loading-text">Memuat data...</p>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Objek -->
+    <div id="modal-add-objek" class="modal hidden">
+        <div class="modal-content">
+            <span id="btn-close-objek" class="close">&times;</span>
+            <h2>Lapor Temuan Objek</h2>
+            <p id="objek-context-site" style="color: #6b7280; font-size: 14px; margin-bottom: 15px;">-</p>
+            
+            <form id="form-add-objek">
+                <input type="hidden" id="objek-situs-id">
+
+                <div class="form-group">
+                    <label>Nama Objek</label>
+                    <input type="text" id="nama_objek" required>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Objek</label>
+                    <input type="text" id="jenis_objek" placeholder="Arca/Manik-manik/Keramik" required>
+                </div>
+                <div class="form-group">
+                    <label>Bahan</label>
+                    <input type="text" id="bahan" placeholder="Batu/Emas/Tanah Liat" required>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Panjang (cm)</label>
+                        <input type="number" id="panjang" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Lebar (cm)</label>
+                        <input type="number" id="lebar" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tinggi (cm)</label>
+                        <input type="number" id="tinggi" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Keterangan Tambahan (Opsional)</label>
+                    <input type="text" id="teks_transliterasi" placeholder="Inskripsi/Ciri khusus">
+                </div>
+
+                <div class="form-group" style="border-top: 1px dashed #eee; padding-top: 15px; margin-top: 15px;">
+                    <label>Tokoh Terkait (Opsional)</label>
+                    <select id="select-tokoh-objek" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="" disabled selected>Memuat...</option>
+                    </select>
+                    
+                    <div id="container-new-tokoh" class="hidden" style="margin-top: 8px;">
+                        <input type="text" id="input-new-tokoh-nama" placeholder="Nama Tokoh Baru..." 
+                               style="width: 100%; padding: 10px; border: 1px solid #dfdfdf; background-color: #fffbeb; border-radius: 6px; margin-bottom: 5px;">
+                        <input type="text" id="input-new-tokoh-gelar" placeholder="Gelar (Contoh: Sunan/Prabu)..." 
+                               style="width: 100%; padding: 10px; border: 1px solid #d8d8d8; background-color: #fffbeb; border-radius: 6px;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Kirim Laporan Objek</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="./modules/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+require('dotenv').config();
+const express = require('express');
+const helmet = require('helmet');
+const pool = require('./db'); 
+const cors = require('cors');
+
+const app = express();
+app.use(helmet());
+const port = 3000;
+
+app.use(cors());
+app.use(express.json());
+
+const rutePengguna = require('./routes/pengguna');
+const ruteSitus = require('./routes/situs');
+const ruteKerajaan = require('./routes/kerajaan');
+const ruteAlamat = require('./routes/alamat');
+const ruteTokoh = require('./routes/tokoh');
+const ruteArkeolog = require('./routes/arkeolog');
+const ruteObjek = require('./routes/objek_temuan');
+const ruteRelasi = require('./routes/relasi');
+
+app.use('/api/auth', rutePengguna); 
+app.use('/api/situs', ruteSitus);
+app.use('/api/kerajaan', ruteKerajaan);
+app.use('/api/alamat', ruteAlamat);
+app.use('/api/tokoh', ruteTokoh);
+app.use('/api/arkeolog', ruteArkeolog);
+app.use('/api/objek', ruteObjek);
+app.use('/api/relasi', ruteRelasi);
+
+app.get('/', (req, res) => {
+    res.send('PostgreSQL is working!');
+});
+
+app.get('/test-db', async(req, res) => {
+    try {
+        const results = await pool.query('SELECT 1 + 1 AS solution');
+        res.json(results.rows[0]);
+    } catch (error){
+        console.error('Error koneksi DB:', error);
+        res.status(500).json({message: 'Gagal terhubung ke postgreSQL'});
+    } 
+});
+
+app.listen(port, () => {
+    console.log(`Server jalan di http://localhost:${port}`)
+});
