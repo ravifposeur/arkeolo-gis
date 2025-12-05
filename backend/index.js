@@ -20,6 +20,13 @@ const ruteArkeolog = require('./routes/arkeolog');
 const ruteObjek = require('./routes/objek_temuan');
 const ruteRelasi = require('./routes/relasi');
 
+app.use(cors({
+    origin: 'https://arkeologis.vercel.app', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+
 app.use('/api/auth', rutePengguna); 
 app.use('/api/situs', ruteSitus);
 app.use('/api/kerajaan', ruteKerajaan);
@@ -29,11 +36,6 @@ app.use('/api/arkeolog', ruteArkeolog);
 app.use('/api/objek', ruteObjek);
 app.use('/api/relasi', ruteRelasi);
 
-app.use(cors({
-    origin: 'https://arkeologis.vercel.app', 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
 
 app.get('/', (req, res) => {
     res.send('Backend ArkeoloGIS Is working on Vercel!');
