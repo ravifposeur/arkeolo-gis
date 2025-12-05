@@ -3,334 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGis : Islamic Archaelogy GIS</title>
-
-    <!-- Font & Icons -->
+    <title>Selamat Datang di Arkeolo-GIS</title>
+    
+    <!-- Font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
-    <!-- Leaflet & Styles -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./assets/css/style.css">
+
+    <style>
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: #1f2937; background: #fff; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Navbar */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; position: absolute; width: 100%; top: 0; z-index: 10;
+            background: rgba(255,255,255,0.8); /* Sedikit background biar kebaca di HP */
+            backdrop-filter: blur(5px);
+        }
+        .logo { font-size: 24px; font-weight: 800; color: #2563eb; display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { margin-left: 30px; font-weight: 600; color: #4b5563; transition: 0.3s; }
+        .nav-links a:hover { color: #2563eb; }
+        .btn-login {
+            padding: 10px 24px; border: 2px solid #2563eb; border-radius: 50px;
+            color: #2563eb; font-weight: 600; transition: 0.3s;
+        }
+        .btn-login:hover { background: #2563eb; color: #fff; }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh; /* Ganti height jadi min-height biar aman di HP pendek */
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 100px 20px 60px 20px; /* Padding atas ditambah utk navbar */
+            background: radial-gradient(circle at top right, #eff6ff 0%, #fff 40%);
+            position: relative;
+        }
+        
+        /* Background Decoration (Blob) */
+        .blob {
+            position: absolute; width: 600px; height: 600px;
+            background: linear-gradient(45deg, #dbeafe, #eff6ff);
+            border-radius: 50%; filter: blur(80px); z-index: -1;
+            top: -100px; right: -100px; opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 20px;
+            background: linear-gradient(to right, #1e3a8a, #2563eb);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle { font-size: 20px; color: #6b7280; max-width: 600px; margin: 0 auto 40px auto; line-height: 1.6; }
+
+        .cta-group { display: flex; gap: 20px; justify-content: center; }
+        
+        .btn-primary {
+            padding: 16px 40px; background: #2563eb; color: white; border-radius: 50px;
+            font-weight: 600; font-size: 18px; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s; display: inline-block;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5); }
+
+        .btn-secondary {
+            padding: 16px 40px; background: #fff; color: #4b5563; border-radius: 50px;
+            font-weight: 600; font-size: 18px; border: 1px solid #e5e7eb;
+            transition: 0.2s; display: inline-block;
+        }
+        .btn-secondary:hover { border-color: #9ca3af; color: #111827; }
+
+        /* Features Grid */
+        .features {
+            padding: 80px 40px; max-width: 1200px; margin: 0 auto;
+            /* Ubah minmax jadi 280px biar aman di HP kecil */
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;
+        }
+        
+        .feature-card {
+            padding: 30px; border-radius: 24px; background: #fff; border: 1px solid #f3f4f6;
+            transition: 0.3s; text-align: left;
+        }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: #bfdbfe; }
+        
+        .icon-box {
+            width: 50px; height: 50px; background: #eff6ff; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #2563eb; margin-bottom: 20px;
+        }
+        
+        .feature-card h3 { font-size: 18px; margin-bottom: 10px; font-weight: 700; }
+        .feature-card p { color: #6b7280; line-height: 1.6; font-size: 15px; }
+
+        /* Footer */
+        footer { text-align: center; padding: 40px 20px; color: #9ca3af; font-size: 14px; border-top: 1px solid #f3f4f6; }
+
+        /* =========================================
+           RESPONSIVE CSS (MOBILE)
+           ========================================= */
+        @media (max-width: 768px) {
+            /* Navbar: Stack ke bawah */
+            nav {
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+                position: relative; /* Biar tidak melayang menutupi konten di HP */
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+            }
+            
+            .nav-links a { margin-left: 0; }
+            
+            /* Hero Section */
+            .hero {
+                padding: 40px 20px;
+                min-height: auto; /* Tinggi menyesuaikan konten */
+            }
+
+            h1 { font-size: 36px; margin-bottom: 15px; } /* Font judul lebih kecil */
+            
+            .subtitle { font-size: 16px; margin-bottom: 30px; }
+            
+            /* Tombol CTA jadi vertikal (atas bawah) */
+            .cta-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%; /* Tombol full width biar gampang dipencet */
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            /* Dekorasi Blob diperkecil */
+            .blob { width: 300px; height: 300px; top: -50px; right: -50px; }
+            
+            /* Features */
+            .features { padding: 40px 20px; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Peta -->
-    <div id="map"></div>
-    
-        <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="search-input" placeholder="Cari nama situs, desa, atau kerajaan...">
-    </div>
-
-    <!-- 2. TOMBOL FILTER -->
-    <button id="btn-filter-toggle" class="floating-btn-filter" title="Filter Data">
-        <i class="fa-solid fa-filter"></i>
-    </button>
-
-    <!-- 3. PANEL FILTER (Hidden) -->
-    <div id="filter-panel" class="filter-panel hidden">
-        <div class="filter-header">
-            <h3>Filter Peta</h3>
-            <span id="close-filter" style="cursor:pointer;">&times;</span>
+    <nav>
+        <div class="logo"><i class="fa-solid fa-layer-group"></i> Arkeolo-GIS</div>
+        <div class="nav-links">
+            <a href="guide.html">Panduan</a>
+            <a href="map.html" class="btn-login">Masuk ke Peta</a>
         </div>
-        
-            <div class="filter-group">
-        <label>Jenis Situs</label>
-        <div id="filter-jenis-container" class="checkbox-group">
-            <!-- (Checkbox lama biarkan) -->
-            <label><input type="checkbox" value="Candi" checked> Candi</label>
-            <label><input type="checkbox" value="Makam" checked> Makam</label>
-            <label><input type="checkbox" value="Prasasti" checked> Prasasti</label>
-            <label><input type="checkbox" value="Petirtaan" checked> Petirtaan</label>
-            <label><input type="checkbox" value="Gua" checked> Gua</label>
-            <label><input type="checkbox" value="Lainnya" checked> Lainnya</label>
-        </div>
-    </div>
+    </nav>
 
-    <!-- FILTER BARU: TOKOH -->
-    <div class="filter-group" style="margin-top: 15px;">
-        <label>Tokoh Terkait</label>
-        <select id="filter-tokoh" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-            <option value="">Semua Tokoh</option>
-            <!-- Opsi akan diisi JS -->
-        </select>
-    </div>
+    <div class="blob"></div>
 
-    <button id="btn-apply-filter" class="btn-primary" style="margin-top:10px; padding:8px;">Terapkan</button>
-    <button id="btn-reset-filter" style="width:100%; background:none; border:none; color:#666; margin-top:5px; cursor:pointer; font-size:12px;">Reset Filter</button>
-    </div>
-
-
-    <!-- Tombol GPS Langsung (Di atas tombol +) -->
-    <button id="btn-gps-direct" class="floating-btn-gps hidden" title="Lapor di lokasi saya">
-        <i class="fa-solid fa-crosshairs"></i>
-    </button>
-
-    <!-- Tombol Dashboard -->
-    <a href="dashboard.html" class="floating-btn btn-dashboard" style="text-decoration: none; text-align: center;">
-        Dashboard
-    </a>
-    
-    
-    <!-- Tombol Login -->
-    <button id="btn-login-toggle" class="floating-btn">Login</button>    
-    
-    <!-- Modal Login -->
-    <div id="modal-login" class="modal hidden">
-        <div class="modal-content">
-            <span id="btn-close-modal" class="close">&times;</span>
-            <h2>Masuk Arkeolo-GIS</h2>
-            <p>Silakan login untuk berkontribusi data.</p>
-            
-            <form id="form-login">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" placeholder="nama@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="password" placeholder="******" required>
-                </div>
-                <button type="submit" class="btn-primary">Masuk</button>
-                
-                <!-- LINK BARU -->
-                <div style="margin-top: 15px; text-align: center; font-size: 13px;">
-                    <a href="#" id="link-forgot" style="color: #2563eb; text-decoration: none;">Lupa Password?</a>
-                    <span style="margin: 0 10px; color: #ddd;">|</span>
-                    <a href="#" id="link-register" style="color: #2563eb; text-decoration: none;">Buat Akun Baru</a>
-                </div>
-            </form>
-            <p id="login-error" class="error-text"></p>
-        </div>
-    </div>
-
-    <div id="modal-register" class="modal hidden">
-        <div class="modal-content">
-            <span id="close-register" class="close">&times;</span>
-            <h2>Daftar Akun Baru</h2>
-            <form id="form-register">
-                <div class="form-group">
-                    <label>Nama Pengguna</label>
-                    <input type="text" id="reg-username" required>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="reg-email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password (Min. 8 Karakter)</label>
-                    <input type="password" id="reg-password" required minlength="8">
-                </div>
-                <button type="submit" class="btn-primary">Daftar Sekarang</button>
-            </form>
-            <p style="text-align: center; font-size: 13px; margin-top: 10px;">
-                Sudah punya akun? <a href="#" id="link-login-back" style="color: #2563eb; text-decoration: none;">Login</a>
+    <header class="hero">
+        <div>
+            <h1>Jelajahi Jejak<br>Sejarah Nusantara</h1>
+            <p class="subtitle">
+                Platform Sistem Informasi Geografis kolaboratif untuk memetakan, mencatat, dan melestarikan situs arkeologi Islam di Pulau Jawa.
             </p>
+            <div class="cta-group">
+                <a href="map.html" class="btn-primary">
+                    <i class="fa-solid fa-map-location-dot" style="margin-right:8px"></i> Buka Peta Interaktif
+                </a>
+                <a href="#features" class="btn-secondary">Pelajari Lebih Lanjut</a>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Tombol Tambah (+) -->
-    <button id="btn-add-mode" class="floating-btn-add hidden">+</button>
-
-    <!-- Modal Tambah Situs -->
-    <div id="modal-add-situs" class="modal hidden">
-        <div class="modal-content">
-            <span id="btn-close-add" class="close">&times;</span>
-            <h2>Lapor Situs Baru</h2>
-            <p>Lokasi: <span id="display-latlng" style="color: #2563eb; font-weight: bold;">-</span></p>
-            
-            <form id="form-add-situs">
-                <input type="hidden" id="input-lat">
-                <input type="hidden" id="input-lng">
-
-                <div class="form-group">
-                    <label>Nama Situs</label>
-                    <input type="text" id="nama_situs" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Jalan / Dusun</label>
-                    <input type="text" id="jalan_dusun" required>
-                </div> 
-
-                <div class="form-group">
-                    <label>Jenis Situs</label>
-                    <select id="jenis_situs" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                        <option value="" disabled selected>-- Pilih Jenis --</option>
-                        <option value="Candi">Candi</option>
-                        <option value="Makam">Makam</option>
-                        <option value="Prasasti">Prasasti</option>
-                        <option value="Petirtaan">Petirtaan (Pemandian)</option>
-                        <option value="Gua">Gua</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
-                </div>
-
-                <!-- WILAYAH BERTINGKAT (CHAINED DROPDOWN) -->
-                <div style="background: #f9fafb; padding: 10px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px;">
-                    <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #666;">LOKASI ADMINISTRATIF</p>
-                    
-                    <div class="form-group">
-                        <label>Kota / Kabupaten</label>
-                        <select id="select-kota" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
-                            <option value="" disabled selected>Memuat...</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Kecamatan</label>
-                        <select id="select-kecamatan" disabled required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; background: #eee;">
-                            <option value="" disabled selected>Pilih Kota Dulu</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Desa / Kelurahan</label>
-                        <select id="select-desa" disabled required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd; background: #eee;">
-                            <option value="" disabled selected>Pilih Kecamatan Dulu</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- BAGIAN KERAJAAN -->
-                <div class="form-group">
-                    <label>Kerajaan / Masa</label>
-                    <select id="select-kerajaan" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                        <option value="" disabled selected>Memuat...</option>
-                    </select>
-                    
-                    <!-- Input Hidden untuk Kerajaan Baru (Styling bersih) -->
-                    <input type="text" id="input-new-kerajaan" class="hidden" placeholder="Tulis Nama Kerajaan Baru..."
-                           style="margin-top: 8px;">
->
-                </div>
-
-                <!-- BAGIAN PENELITI (ARKEOLOG) -->
-                <div class="form-group">
-                    <label>Peneliti Utama (Opsional)</label>
-                    <select id="select-arkeolog" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                        <option value="" disabled selected>Memuat...</option>
-                    </select>
-
-                    <!-- Input Hidden untuk Arkeolog Baru (Styling bersih) -->
-                    <input type="text" id="input-new-arkeolog" class="hidden" placeholder="Tulis Nama Peneliti Baru..." 
-                           style="margin-top: 8px;">
-                </div>
-
-                <button type="submit" class="btn-primary">Kirim Laporan</button>
-            </form>
+    <section id="features" class="features">
+        <div class="feature-card">
+            <div class="icon-box"><i class="fa-solid fa-users"></i></div>
+            <h3>Kolaborasi Terbuka</h3>
+            <p>Siapa saja bisa berkontribusi melaporkan temuan situs atau objek baru. Data dikumpulkan dari masyarakat untuk sejarah.</p>
         </div>
-    </div>
-
-    <div id="modal-forgot" class="modal hidden">
-        <div class="modal-content">
-            <span id="close-forgot" class="close">&times;</span>
-            <h2>Lupa Password</h2>
-            <p>Masukkan email Anda. Kami akan mengirimkan token reset.</p>
-            <form id="form-forgot">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="forgot-email" required>
-                </div>
-                <button type="submit" class="btn-primary">Kirim Token</button>
-            </form>
+        <div class="feature-card">
+            <div class="icon-box"><i class="fa-solid fa-certificate"></i></div>
+            <h3>Verifikasi Ahli</h3>
+            <p>Setiap data yang masuk akan divalidasi oleh arkeolog senior (Verifikator) untuk menjamin keakuratan informasi.</p>
         </div>
-    </div>
-
-    <div id="modal-reset" class="modal hidden">
-        <div class="modal-content">
-            <span id="close-reset" class="close">&times;</span>
-            <h2>Reset Password</h2>
-            <p>Masukkan Token yang Anda terima dan password baru.</p>
-            <form id="form-reset">
-                <div class="form-group">
-                    <label>Token Reset</label>
-                    <input type="text" id="reset-token" placeholder="Paste token dari console/email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password Baru</label>
-                    <input type="password" id="reset-password" required minlength="8">
-                </div>
-                <button type="submit" class="btn-primary">Ubah Password</button>
-            </form>
+        <div class="feature-card">
+            <div class="icon-box"><i class="fa-solid fa-database"></i></div>
+            <h3>Data Terstruktur</h3>
+            <p>Basis data relasional yang menghubungkan Situs, Objek, Tokoh Sejarah, dan Peneliti dalam satu ekosistem.</p>
         </div>
-    </div>
+    </section>
 
-    <!-- Side Panel -->
-    <div id="side-panel" class="side-panel">
-        <button id="btn-close-panel" class="btn-close-panel">&times;</button>
-        <div id="panel-content">
-            <p class="loading-text">Memuat data...</p>
-        </div>
-    </div>
+    <footer>
+        &copy; 2025 Arkeolo-GIS Project. Dibuat dengan ❤️ untuk Sejarah Indonesia.
+    </footer>
 
-    <!-- Modal Tambah Objek -->
-    <div id="modal-add-objek" class="modal hidden">
-        <div class="modal-content">
-            <span id="btn-close-objek" class="close">&times;</span>
-            <h2>Lapor Temuan Objek</h2>
-            <p id="objek-context-site" style="color: #6b7280; font-size: 14px; margin-bottom: 15px;">-</p>
-            
-            <form id="form-add-objek">
-                <input type="hidden" id="objek-situs-id">
-
-                <div class="form-group">
-                    <label>Nama Objek</label>
-                    <input type="text" id="nama_objek" required>
-                </div>
-                <div class="form-group">
-                    <label>Jenis Objek</label>
-                    <input type="text" id="jenis_objek" placeholder="Arca/Manik-manik/Keramik" required>
-                </div>
-                <div class="form-group">
-                    <label>Bahan</label>
-                    <input type="text" id="bahan" placeholder="Batu/Emas/Tanah Liat" required>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                    <div class="form-group">
-                        <label>Panjang (cm)</label>
-                        <input type="number" id="panjang" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Lebar (cm)</label>
-                        <input type="number" id="lebar" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Tinggi (cm)</label>
-                        <input type="number" id="tinggi" step="0.01" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Keterangan Tambahan (Opsional)</label>
-                    <input type="text" id="teks_transliterasi" placeholder="Inskripsi/Ciri khusus">
-                </div>
-
-                <div class="form-group" style="border-top: 1px dashed #eee; padding-top: 15px; margin-top: 15px;">
-                    <label>Tokoh Terkait (Opsional)</label>
-                    <select id="select-tokoh-objek" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                        <option value="" disabled selected>Memuat...</option>
-                    </select>
-                    
-                    <div id="container-new-tokoh" class="hidden" style="margin-top: 8px;">
-                        <input type="text" id="input-new-tokoh-nama" placeholder="Nama Tokoh Baru..." 
-                               style="width: 100%; padding: 10px; border: 1px solid #dfdfdf; background-color: #fffbeb; border-radius: 6px; margin-bottom: 5px;">
-                        <input type="text" id="input-new-tokoh-gelar" placeholder="Gelar (Contoh: Sunan/Prabu)..." 
-                               style="width: 100%; padding: 10px; border: 1px solid #d8d8d8; background-color: #fffbeb; border-radius: 6px;">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary">Kirim Laporan Objek</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script type="module" src="./modules/main.js"></script>
 </body>
 </html>
