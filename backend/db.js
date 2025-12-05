@@ -1,33 +1,29 @@
+// File: proyek_arkeologi_backend/db.js
+
 const { Pool } = require('pg');
 require('dotenv').config();
 
-let config;
-
-if (process.env.DATABASE_URL) {
-    config = {
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false 
-        }
-    };
+// --- DEBUGGING ---
+// Cek apakah Vercel bisa membaca DATABASE_URL
+if (!process.env.DATABASE_URL) {
+    console.error("❌ FATAL ERROR: Variabel 'DATABASE_URL' tidak ditemukan / undefined!");
+    console.error("Mohon cek Settings > Environment Variables di Dashboard Vercel.");
 } else {
-    config = {
-        user: process.env.DB_USER,
-        host: process.env.DB_HOST,
-        database: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        port: process.env.DB_PORT,
-        ssl: {
-            rejectUnauthorized: false 
-        }
-    };
+    console.log("✅ DATABASE_URL ditemukan (Backend siap connect).");
 }
 
-const pool = new Pool(config);
+const pool = new Pool({
+    // Kita paksa pakai connectionString dari ENV
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false // Wajib untuk Neon.tech
+    }
+});
 
+// Cek koneksi saat inisialisasi
 pool.connect((err, client, release) => {
     if (err) {
-        console.error('❌ Gagal konek DB:', err.message);
+        console.error('❌ Gagal konek ke Database saat startup:', err.message);
     } else {
         console.log('✅ Berhasil konek ke Database Neon!');
         release();
