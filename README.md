@@ -47,6 +47,12 @@ The system distinguishes between three user tiers to protect data quality:
 * **Smart Rejection:** Rejecting a site intelligently cleans up related master data only if it is not referenced by other valid sites.
 * **GPS Integration:** One-click geolocation locking for field surveyors.
 
+### 4. Comprehensive Administrative Dashboard
+* **Direct CRUD Operations:** Complete Create, Read, Update, and Delete functionality for all data entities (sites, artifacts, kingdoms, researchers, users) accessible through an intuitive administrative interface.
+* **Real-time Data Management:** Instant updates to the database with immediate reflection on the interactive map.
+* **Data Validation:** Built-in form validation and error handling for robust data integrity.
+
+
 ---
 
 ## Installation & Setup (Local)
@@ -60,7 +66,7 @@ Follow these instructions to run the project on your local machine.
 
 ### Step 1: Clone Repository
 ```bash
-git clone [https://github.com/ravifposeur/arkeolo-gis.git](https://github.com/yourusername/arkeolo-gis.git)
+git clone [https://github.com/ravifposeur/arkeolo-gis.git](https://github.com/ravifposeur/arkeolo-gis.git)
 cd arkeolo-gis
 ```
 
@@ -149,8 +155,14 @@ Arkeolo-GIS/
     ├── assets/          # CSS & Static Files
     ├── modules/         # Modular JavaScript logic
     │   ├── api.js       # API Fetcher
-    │   ├── map.js       # Leaflet Logic
-    │   └── ui.js        # DOM Manipulation
-    ├── index.html       # Main Map Interface
+    │   ├── auth.js      # Leaflet Logic
+    │   ├── dashboard.js # Admin dashboard logic
+    |   ├── main.js      # Main logic  
+    |   ├── map.js       # Map & Leaflet logic
+    |   ├── panel.js     # Side panel logic
+    |   └── ui.js        # DOM Manipulation
+    ├── index.html       # Landing page Interface
+    ├── guide.html       # Guide for User
+    ├── map.html         # Main map
     └── dashboard.html   # Admin Interface
 ```

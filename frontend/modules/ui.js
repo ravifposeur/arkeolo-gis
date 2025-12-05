@@ -13,10 +13,8 @@ import { setupPanelEvents } from './panel.js';
 let isAddMode = false;
 
 export function setupUI() {
-    // 1. Jalankan Event Listener untuk Tombol Close di Side Panel
     setupPanelEvents(); 
 
-    // --- Definisi Variabel DOM ---
     const btnLoginToggle = document.getElementById('btn-login-toggle');
     const modal = document.getElementById('modal-login');
     const btnClose = document.getElementById('btn-close-modal');
@@ -62,9 +60,6 @@ export function setupUI() {
     // Cek status login saat halaman dimuat pertama kali
     updateButtonState();
 
-    // ==========================================
-    // LOGIKA LOGIN
-    // ==========================================
     btnLoginToggle.addEventListener('click', () => {
         if (isLoggedIn()) {
             if (confirm("Anda yakin ingin keluar?")) {
@@ -108,30 +103,22 @@ export function setupUI() {
         }
     });
 
-    // ==========================================
-    // LOGIKA AUTHENTICATION (REGISTER & RESET)
-    // ==========================================
-
-    // 1. Buka Register dari Login
     document.getElementById('link-register').addEventListener('click', (e) => {
         e.preventDefault();
         modal.classList.add('hidden'); // Tutup Login
         modalRegister.classList.remove('hidden'); // Buka Register
     });
 
-    // 2. Balik ke Login dari Register
     document.getElementById('link-login-back').addEventListener('click', (e) => {
         e.preventDefault();
         modalRegister.classList.add('hidden');
         modal.classList.remove('hidden');
     });
 
-    // 3. Close Register
     document.getElementById('close-register').addEventListener('click', () => {
         modalRegister.classList.add('hidden');
     });
 
-    // 4. Submit Register
     document.getElementById('form-register').addEventListener('submit', async (e) => {
         e.preventDefault();
         try {
@@ -148,7 +135,6 @@ export function setupUI() {
         }
     });
 
-    // 5. Buka Forgot Password dari Login
     document.getElementById('link-forgot').addEventListener('click', (e) => {
         e.preventDefault();
         modal.classList.add('hidden');
@@ -157,7 +143,6 @@ export function setupUI() {
 
     document.getElementById('close-forgot').addEventListener('click', () => modalForgot.classList.add('hidden'));
 
-    // 6. Submit Forgot Password (Minta Token)
     document.getElementById('form-forgot').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('forgot-email').value;
@@ -165,7 +150,6 @@ export function setupUI() {
             const res = await forgotPassword(email);
             alert(`${res.message}\n(Untuk simulasi: Cek Terminal Backend Anda untuk Token)`);
             
-            // Otomatis pindah ke modal Reset
             modalForgot.classList.add('hidden');
             modalReset.classList.remove('hidden');
         } catch (err) { 
@@ -173,10 +157,8 @@ export function setupUI() {
         }
     });
 
-    // 7. Logika Reset Password
     document.getElementById('close-reset').addEventListener('click', () => modalReset.classList.add('hidden'));
 
-    // 8. Submit Reset Password (Kirim Token + Pass Baru)
     document.getElementById('form-reset').addEventListener('submit', async (e) => {
         e.preventDefault();
         try {
@@ -192,11 +174,7 @@ export function setupUI() {
         }
     });
 
-    // ==========================================
-    // LOGIKA TAMBAH SITUS (UPDATED)
-    // ==========================================
-    
-    // 1. Klik Tombol (+)
+
     btnFloatingAdd.addEventListener('click', async () => {
         isAddMode = !isAddMode;
         if (isAddMode) {
@@ -204,7 +182,6 @@ export function setupUI() {
             btnFloatingAdd.textContent = 'x'; 
             document.getElementById('map').classList.add('cursor-crosshair');
             
-            // Load data master (Kota, Kerajaan, Arkeolog)
             await ensureDropdownsLoaded(); 
             
             alert("Klik lokasi di peta.");
@@ -213,9 +190,6 @@ export function setupUI() {
         }
     });
 
-    // --- LOGIKA TAMPILKAN INPUT "BUAT BARU" ---
-    
-    // Jika pilih "NEW" di Kerajaan -> Munculkan input teks
     selKerajaan.addEventListener('change', () => {
         if (selKerajaan.value === 'NEW') {
             inpNewKerajaan.classList.remove('hidden');
@@ -228,7 +202,6 @@ export function setupUI() {
         }
     });
 
-    // Jika pilih "NEW" di Arkeolog -> Munculkan input teks
     selArkeolog.addEventListener('change', () => {
         if (selArkeolog.value === 'NEW') {
             inpNewArkeolog.classList.remove('hidden');
@@ -241,7 +214,6 @@ export function setupUI() {
         }
     });
 
-    // --- EVENT LISTENER DROPDOWN BERTINGKAT ---
     selKota.addEventListener('change', async () => {
         const kotaId = selKota.value;
         resetSelect(selKec, 'Memuat...'); 
@@ -257,12 +229,10 @@ export function setupUI() {
         populateSelect(selDesa, desaList, 'desa_kelurahan_id', 'nama_desa_kelurahan', '-- Pilih Desa --');
     });
 
-    // 2. Tutup Modal Tambah
     btnCloseAdd.addEventListener('click', () => {
         modalAdd.classList.add('hidden');
     });
 
-    // 3. SUBMIT FORM TAMBAH SITUS (SUPER LOGIC)
     formAdd.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -272,12 +242,10 @@ export function setupUI() {
         btnSubmit.disabled = true;
 
         try {
-            // A. PROSES KERAJAAN (Pilih Lama atau Buat Baru?)
             let kerajaanId = selKerajaan.value;
             
             if (kerajaanId === 'NEW') {
                 const namaBaru = inpNewKerajaan.value;
-                // Buat Kerajaan Baru di Backend
                 const resKerajaan = await postKerajaan({ 
                     nama_kerajaan: namaBaru, 
                     deskripsi_singkat: "Ditambahkan oleh Kontributor Lapangan" 
@@ -287,7 +255,6 @@ export function setupUI() {
                 kerajaanId = null;
             }
 
-            // B. PROSES BUAT SITUS
             const dataSitus = {
                 nama_situs: document.getElementById('nama_situs').value,
                 jalan_dusun: document.getElementById('jalan_dusun').value,
@@ -302,12 +269,10 @@ export function setupUI() {
             const resSitus = await postSitusBaru(dataSitus);
             const situsIdBaru = resSitus.data.situs_id;
 
-            // C. PROSES ARKEOLOG (Opsional)
             let arkeologId = selArkeolog.value;
             
             if (arkeologId === 'NEW') {
                 const namaArkeolog = inpNewArkeolog.value;
-                // Buat Arkeolog Baru di Backend
                 const resArkeolog = await postArkeolog({
                     nama_lengkap: namaArkeolog,
                     afiliasi_institusi: "Kontributor Lapangan",
@@ -317,12 +282,10 @@ export function setupUI() {
                 arkeologId = resArkeolog.data.arkeolog_id; // Pakai ID baru
             }
 
-            // D. HUBUNGKAN ARKEOLOG KE SITUS (Jika ada)
             if (arkeologId && arkeologId !== "") {
                 await postPenelitian(situsIdBaru, parseInt(arkeologId));
             }
 
-            // E. SUKSES
             alert("Sukses! Situs (dan data terkait) berhasil dilaporkan.");
             modalAdd.classList.add('hidden');
             formAdd.reset();
@@ -374,7 +337,6 @@ export function setupUI() {
         );
     });
 
-    // 1. Dengarkan Event Custom dari panel.js ('openObjekModal')
     document.addEventListener('openObjekModal', async (e) => {
         const situs = e.detail; 
         document.getElementById('objek-situs-id').value = situs.situs_id;
@@ -398,12 +360,10 @@ export function setupUI() {
         }
     });
 
-    // 2. Tutup Modal Objek
     btnCloseObjek.addEventListener('click', () => {
         modalObjek.classList.add('hidden');
     });
 
-    // 3. Submit Form Objek
     formObjek.addEventListener('submit', async (e) => {
         e.preventDefault();
         const btnSubmit = formObjek.querySelector('button');
@@ -411,11 +371,10 @@ export function setupUI() {
         btnSubmit.disabled = true;
 
         try {
-            // 1. PROSES TOKOH (Pilih atau Buat Baru?)
             let tokohId = selTokohObjek.value;
             
             if (tokohId === 'NEW') {
-                // A. Buat Tokoh Baru
+                // Buat Tokoh Baru
                 const resTokoh = await postTokoh({
                     nama_tokoh: inpNewTokohNama.value,
                     biografi_singkat: "Ditambahkan oleh Kontributor Lapangan",
@@ -425,13 +384,12 @@ export function setupUI() {
                 });
                 tokohId = resTokoh.data.tokoh_id;
 
-                // B. Buat Gelar Tokoh (Wajib jika buat baru sesuai form)
+                // buat Gelar Tokoh (Wajib jika buat baru sesuai form)
                 await postGelarTokoh(tokohId, inpNewTokohGelar.value);
             } else if (tokohId === "") {
                 tokohId = null; // User tidak memilih tokoh
             }
 
-            // 2. PROSES OBJEK (Sama seperti sebelumnya)
             const dataObjek = {
                 situs_id: parseInt(document.getElementById('objek-situs-id').value),
                 nama_objek: document.getElementById('nama_objek').value,
@@ -445,7 +403,6 @@ export function setupUI() {
 
             const resObjek = await postObjekBaru(dataObjek);
 
-            // 3. RELASI ATRIBUSI (Hubungkan Objek ke Tokoh)
             if (tokohId && tokohId !== "") {
                 await postAtribusi(resObjek.data.objek_id, parseInt(tokohId));
             }
@@ -465,9 +422,6 @@ export function setupUI() {
         }
     });
 
-    // ==========================================
-    // Return Callback untuk Main.js
-    // ==========================================
     return {
         onMapClick: (latlng) => {
             if (isAddMode) {
@@ -480,7 +434,6 @@ export function setupUI() {
     };
 }
 
-// --- FUNGSI HELPER (Di luar export) ---
 
 function resetAddMode() {
     isAddMode = false;
@@ -520,7 +473,6 @@ function populateSelect(selectElement, data, idKey, nameKey, defaultText) {
     selectElement.style.background = '#fff';
 }
 
-// Helper Baru: Isi Dropdown dengan opsi "Buat Baru"
 function populateSelectWithNew(selectElement, data, idKey, nameKey, defaultText) {
     selectElement.innerHTML = `<option value="">${defaultText}</option>`;
     
@@ -558,7 +510,6 @@ async function ensureDropdownsLoaded() {
     // Hanya load jika dropdown masih kosong
     if (selKota.options.length <= 1) {
         try {
-            // Mengambil data dari API secara paralel
             const [kotaList, kerajaanList, arkeologList] = await Promise.all([
                 getKota(),
                 getKerajaan(),
@@ -586,7 +537,6 @@ async function ensureTokohLoaded(selectElement) {
     if (selectElement.options.length <= 1) {
         try {
             const tokohList = await getAllTokoh();
-            // Gunakan helper populateSelectWithNew yang sudah ada
             populateSelectWithNew(selectElement, tokohList, 'tokoh_id', 'nama_tokoh', '-- Pilih Tokoh (Opsional) --');
         } catch (err) { 
             console.error("Gagal load tokoh", err); 

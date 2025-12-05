@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebGis : Islamic Archaelogy GIS</title>
 
-    <!-- Font & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Leaflet & Styles -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
 
-    <!-- Peta -->
     <div id="map"></div>
     
         <div class="search-container">
@@ -25,12 +22,10 @@
         <input type="text" id="search-input" placeholder="Cari nama situs, desa, atau kerajaan...">
     </div>
 
-    <!-- 2. TOMBOL FILTER -->
     <button id="btn-filter-toggle" class="floating-btn-filter" title="Filter Data">
         <i class="fa-solid fa-filter"></i>
     </button>
 
-    <!-- 3. PANEL FILTER (Hidden) -->
     <div id="filter-panel" class="filter-panel hidden">
         <div class="filter-header">
             <h3>Filter Peta</h3>
@@ -40,7 +35,6 @@
             <div class="filter-group">
         <label>Jenis Situs</label>
         <div id="filter-jenis-container" class="checkbox-group">
-            <!-- (Checkbox lama biarkan) -->
             <label><input type="checkbox" value="Candi" checked> Candi</label>
             <label><input type="checkbox" value="Makam" checked> Makam</label>
             <label><input type="checkbox" value="Prasasti" checked> Prasasti</label>
@@ -50,12 +44,10 @@
         </div>
     </div>
 
-    <!-- FILTER BARU: TOKOH -->
     <div class="filter-group" style="margin-top: 15px;">
         <label>Tokoh Terkait</label>
         <select id="filter-tokoh" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
             <option value="">Semua Tokoh</option>
-            <!-- Opsi akan diisi JS -->
         </select>
     </div>
 
@@ -64,21 +56,17 @@
     </div>
 
 
-    <!-- Tombol GPS Langsung (Di atas tombol +) -->
     <button id="btn-gps-direct" class="floating-btn-gps hidden" title="Lapor di lokasi saya">
         <i class="fa-solid fa-crosshairs"></i>
     </button>
 
-    <!-- Tombol Dashboard -->
     <a href="dashboard.html" class="floating-btn btn-dashboard" style="text-decoration: none; text-align: center;">
         Dashboard
     </a>
     
     
-    <!-- Tombol Login -->
     <button id="btn-login-toggle" class="floating-btn">Login</button>    
     
-    <!-- Modal Login -->
     <div id="modal-login" class="modal hidden">
         <div class="modal-content">
             <span id="btn-close-modal" class="close">&times;</span>
@@ -96,7 +84,6 @@
                 </div>
                 <button type="submit" class="btn-primary">Masuk</button>
                 
-                <!-- LINK BARU -->
                 <div style="margin-top: 15px; text-align: center; font-size: 13px;">
                     <a href="#" id="link-forgot" style="color: #2563eb; text-decoration: none;">Lupa Password?</a>
                     <span style="margin: 0 10px; color: #ddd;">|</span>
@@ -132,10 +119,8 @@
         </div>
     </div>
 
-    <!-- Tombol Tambah (+) -->
     <button id="btn-add-mode" class="floating-btn-add hidden">+</button>
 
-    <!-- Modal Tambah Situs -->
     <div id="modal-add-situs" class="modal hidden">
         <div class="modal-content">
             <span id="btn-close-add" class="close">&times;</span>
@@ -169,7 +154,6 @@
                     </select>
                 </div>
 
-                <!-- WILAYAH BERTINGKAT (CHAINED DROPDOWN) -->
                 <div style="background: #f9fafb; padding: 10px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px;">
                     <p style="margin: 0 0 10px 0; font-size: 12px; font-weight: bold; color: #666;">LOKASI ADMINISTRATIF</p>
                     
@@ -329,7 +313,6 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module" src="./modules/main.js"></script>
 </body>

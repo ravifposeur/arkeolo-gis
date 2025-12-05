@@ -1,4 +1,4 @@
-<!-- File: proyek_arkeologi_frontend/dashboard.html -->
+ File: proyek_arkeologi_frontend/dashboard.html -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -189,7 +189,6 @@
 </head>
 <body>
 
-    <!-- SIDEBAR MENU -->
     <div class="sidebar">
         <div class="brand">🏛️ ArkeoloGIS Admin</div>
         
@@ -202,7 +201,6 @@
         <div class="nav-divider"></div>
         <div style="font-size: 11px; text-transform: uppercase; color: #9ca3af; font-weight: 700; margin-bottom: 8px; padding-left: 16px;">Data Master</div>
 
-        <!-- MENU BARU: SATU TAB UNTUK SEMUA WILAYAH -->
         <div class="nav-item" id="menu-wilayah">Master Wilayah</div>
         
         <div class="nav-item" id="menu-kerajaan">Tambah Kerajaan</div>
@@ -216,18 +214,15 @@
         </div>
     </div>
 
-    <!-- KONTEN UTAMA -->
     <div class="main-content">
         
-        <!-- 1. VIEW VERIFIKASI SITUS (Ganti ID dari view-verif jadi view-verif-situs biar jelas) -->
         <div id="view-verif-situs" class="view-section">
             <h1>Verifikasi Situs Tertunda</h1>
-            <div id="pending-list-situs"> <!-- Ganti ID container -->
+            <div id="pending-list-situs">  Ganti ID container -->
                 <p>Memuat data...</p>
             </div>
         </div>
 
-        <!-- 2. VIEW VERIFIKASI OBJEK (BARU) -->
         <div id="view-verif-objek" class="view-section hidden">
             <h1>Verifikasi Objek Tertunda</h1>
             <div id="pending-list-objek">
@@ -235,14 +230,12 @@
             </div>
         </div>
 
-        <!-- 3 VIEW MASTER WILAYAH (BARU: GRID LAYOUT) -->
         <div id="view-wilayah" class="view-section hidden">
             <h1>Master Wilayah Administratif</h1>
             <p style="color:#6b7280; margin-bottom:24px;">Kelola data Kota, Kecamatan, dan Desa dalam satu tempat.</p>
             
             <div class="wilayah-grid">
                 
-                <!-- FORM 1: KOTA -->
                 <div class="form-card">
                     <h3>1. Tambah Kota/Kabupaten</h3>
                     <form id="form-kota">
@@ -254,13 +247,12 @@
                     </form>
                 </div>
 
-                <!-- FORM 2: KECAMATAN -->
                 <div class="form-card">
                     <h3>2. Tambah Kecamatan</h3>
                     <form id="form-kecamatan">
                         <div class="form-group">
                             <label>Induk Kota/Kabupaten</label>
-                            <!-- ID Khusus Admin -->
+                             ID Khusus Admin -->
                             <select id="adm-select-kota-kec" required style="width:100%; padding:10px; border-radius:6px; border:1px solid #e5e7eb;">
                                 <option value="">Memuat...</option>
                             </select>
@@ -273,7 +265,6 @@
                     </form>
                 </div>
 
-                <!-- FORM 3: DESA (Full Width) -->
                 <div class="form-card" style="grid-column: span 2;">
                     <h3>3. Tambah Desa/Kelurahan</h3>
                     <form id="form-desa" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: end;">
@@ -301,7 +292,6 @@
             </div>
         </div>
 
-        <!-- 4. VIEW TAMBAH KERAJAAN -->
         <div id="view-kerajaan" class="view-section hidden">
             <h1>Master Kerajaan</h1>
             <div class="form-card" style="max-width: 600px;">
@@ -316,7 +306,6 @@
             </div>
         </div>
 
-        <!-- 5. VIEW TAMBAH ARKEOLOG -->
         <div id="view-arkeolog" class="view-section hidden">
             <h1>Master Arkeolog</h1>
             <div class="form-card" style="max-width: 600px;">
@@ -331,7 +320,6 @@
             </div>
         </div>
 
-        <!-- 6. VIEW TAMBAH TOKOH -->
         <div id="view-tokoh" class="view-section hidden">
             <h1>Master Tokoh Sejarah</h1>
             <div class="form-card" style="max-width: 600px;">

@@ -17,7 +17,6 @@ export async function openSidePanel(situsData) {
             getArkeolog()
         ]);
 
-        // 1. Header & Lokasi
         let html = `
             <div class="panel-header-hero">
                 <span class="badge badge-blue">${situsData.jenis_situs}</span>
@@ -32,7 +31,6 @@ export async function openSidePanel(situsData) {
                 <hr class="divider">
         `;
 
-        // 2. Bagian OBJEK TEMUAN (UPDATED DENGAN TOKOH)
         html += `<div class="section-title"><h3>Objek Temuan (${objekList.length})</h3></div>`;
         
         if (objekList.length === 0) {
@@ -41,7 +39,6 @@ export async function openSidePanel(situsData) {
             html += `<div class="objek-list">`;
             
             objekList.forEach(obj => {
-                // Logika Tampilan Tokoh
                 let tokohHTML = '';
                 if (obj.tokoh_terkait) {
                     tokohHTML = `
@@ -52,7 +49,6 @@ export async function openSidePanel(situsData) {
                     `;
                 }
 
-                // Logika Tampilan Transliterasi
                 let transHTML = '';
                 if (obj.teks_transliterasi) {
                     transHTML = `<p class="transliterasi">"${obj.teks_transliterasi}"</p>`;
@@ -75,7 +71,6 @@ export async function openSidePanel(situsData) {
             html += `</div>`;
         }
 
-        // 3. Bagian TIM PENELITI
         html += `
             <hr class="divider">
             <div class="section-title"><h3>Tim Peneliti</h3></div>
@@ -91,11 +86,9 @@ export async function openSidePanel(situsData) {
             html += `<p style="font-size:13px; color:#9ca3af; font-style:italic">Belum ada data peneliti.</p>`;
         }
 
-        // Form Tambah Peneliti (Hanya jika login)
         if (isLoggedIn()) {
             const arkeologOptions = allArkeolog.map(a => `<option value="${a.arkeolog_id}">${a.nama_lengkap}</option>`).join('');
             
-            // --- UPDATED HTML (CLASS BASED) ---
             html += `
                 <div class="link-researcher-box">
                     <p class="link-researcher-title">
@@ -113,7 +106,6 @@ export async function openSidePanel(situsData) {
                 </div>
             `;
 
-            // Tombol Lapor Objek (Sticky Footer)
             html += `
                 <div class="sticky-footer">
                     <button id="btn-open-add-objek" class="btn-primary-full">+ Lapor Objek Baru</button>
@@ -121,10 +113,9 @@ export async function openSidePanel(situsData) {
             `;
         }
 
-        html += `</div>`; // Tutup panel body
+        html += `</div>`; 
         content.innerHTML = html;
 
-        // Event Listeners
         const btnLink = document.getElementById('btn-link-arkeolog');
         if (btnLink) {
             btnLink.addEventListener('click', async () => {

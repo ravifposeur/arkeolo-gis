@@ -13,9 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         console.log("Memuat data...");
         
-        // Load Situs & Tokoh secara paralel
-        // (Note: getAllTokoh mungkin gagal jika user tidak login & backend diproteksi, 
-        // jadi kita handle errornya agar peta tetap jalan)
+    
         const [situsRes, tokohRes] = await Promise.allSettled([
             getVerifiedSitus(),
             getAllTokoh()
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         addSitusMarkers(map, allSitusData); 
         
-        // Setup Filter dengan data Tokoh
         setupSearchAndFilter(map, tokohList);
         
     } catch (err) {
@@ -45,7 +42,6 @@ function setupSearchAndFilter(map, tokohList) {
     const btnReset = document.getElementById('btn-reset-filter');
     const selectTokoh = document.getElementById('filter-tokoh');
 
-    // 1. ISI DROPDOWN TOKOH
     if (tokohList && selectTokoh) {
         tokohList.forEach(t => {
             const opt = document.createElement('option');
@@ -55,8 +51,6 @@ function setupSearchAndFilter(map, tokohList) {
         });
     }
 
-    // 2. PENCARIAN (Real-time)
-    // Update pencarian agar juga mencari di kolom 'tokoh_terkait'
     searchInput.addEventListener('input', (e) => {
         const keyword = e.target.value.toLowerCase();
         const filteredData = allSitusData.filter(situs => {
@@ -70,13 +64,11 @@ function setupSearchAndFilter(map, tokohList) {
         addSitusMarkers(map, filteredData);
     });
 
-    // 3. FILTER TOGGLE
     if (btnFilter && filterPanel) {
         btnFilter.addEventListener('click', () => filterPanel.classList.toggle('hidden'));
         btnCloseFilter.addEventListener('click', () => filterPanel.classList.add('hidden'));
     }
 
-    // 4. TERAPKAN FILTER (Jenis & Tokoh)
     if (btnApply) {
         btnApply.addEventListener('click', () => {
             // Ambil Jenis
@@ -106,7 +98,6 @@ function setupSearchAndFilter(map, tokohList) {
         });
     }
 
-    // 5. RESET
     if (btnReset) {
         btnReset.addEventListener('click', () => {
             document.querySelectorAll('#filter-jenis-container input').forEach(cb => cb.checked = true);
