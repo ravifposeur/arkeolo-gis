@@ -66,7 +66,7 @@ Follow these instructions to run the project on your local machine.
 
 ### Step 1: Clone Repository
 ```bash
-git clone [https://github.com/ravifposeur/arkeolo-gis.git](https://github.com/ravifposeur/arkeolo-gis.git)
+git clone https://github.com/ravifposeur/arkeolo-gis.git
 cd arkeolo-gis
 ```
 
