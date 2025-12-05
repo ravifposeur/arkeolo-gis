@@ -29,6 +29,12 @@ app.use('/api/arkeolog', ruteArkeolog);
 app.use('/api/objek', ruteObjek);
 app.use('/api/relasi', ruteRelasi);
 
+app.use(cors({
+    origin: 'https://arkeo-frontend.vercel.app', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.get('/', (req, res) => {
     res.send('Backend ArkeoloGIS Is working on Vercel!');
 });
