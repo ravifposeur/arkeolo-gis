@@ -30,8 +30,10 @@ app.use('/api/objek', ruteObjek);
 app.use('/api/relasi', ruteRelasi);
 
 app.get('/', (req, res) => {
-    res.send('PostgreSQL is working!');
+    res.send('Backend ArkeoloGIS Is working on Vercel!');
 });
+
+module.exports = app;
 
 app.get('/test-db', async(req, res) => {
     try {
@@ -43,6 +45,8 @@ app.get('/test-db', async(req, res) => {
     } 
 });
 
-app.listen(port, () => {
-    console.log(`Server jalan di http://localhost:${port}`)
-});
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Server jalan di http://localhost:${port}`);
+    });
+}
