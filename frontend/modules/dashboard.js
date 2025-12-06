@@ -14,9 +14,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. Cek Login
     if (!isLoggedIn()) {
         alert("Anda harus login dulu!");
-        window.location.href = 'index.html';
+        window.location.href = 'map.html';
         return;
     }
+    
+    const allowedRoles = ['admin', 'verifikator'];
+    
+    if (!allowedRoles.includes(role)) {
+        alert("Akses ditolak!");
+        window.location.href = 'map.html';
+        return;
+    }   
+
 
     // 2. Load Data Verifikasi (Default)
     loadVerifSitus();
