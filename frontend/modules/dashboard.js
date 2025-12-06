@@ -8,7 +8,7 @@ import {
     getPendingObjek, approveObjek, rejectObjek,
     getDesa, getKecamatan, getKota
 } from './api.js';
-import { isLoggedIn } from './auth.js';
+import { isLoggedIn, getUserRole } from './auth.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Cek Login
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const allowedRoles = ['admin', 'verifikator'];
     
+    const role = getUserRole();
     if (!allowedRoles.includes(role)) {
         alert("Akses ditolak!");
         window.location.href = 'map.html';
